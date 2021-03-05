@@ -1,23 +1,24 @@
 from os import path
 import sqlite3
 from sqlite3 import Error
-import .util
+from .util import createLogger
 
 
 class Database():
-    self.db_file = ""
-    self.conn = None
-    self.log = util.createLogger(__name__)
+    db_file = ""
+    conn = None
+    log = createLogger(__name__)
 
     def __init__(self, database_file):
         self.db_file = path.abspath(database_file)
+        self.connect()
 
     def connect(self):
         """ Try and connect to the database
         """
         try:
-            self.conn = sqlite3.connect(db_file)
-            self.log.info(f'Successfully connected to SQLite Database {db_file}')
+            self.conn = sqlite3.connect(self.db_file)
+            self.log.info(f'Successfully connected to SQLite Database {self.db_file}')
         except Error as e:
             self.log.error(e)
 
