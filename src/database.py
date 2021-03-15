@@ -1,7 +1,7 @@
 from os import path
 import sqlite3
 from sqlite3 import Error
-from .util import createLogger
+from util import createLogger
 
 
 class Database():

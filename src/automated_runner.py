@@ -1,7 +1,7 @@
-from .database import Database
-from .util import createLogger
-from .constants import DEFAULT_DB_PATH
-from .db_schema import ALL_TABLES
+from database import Database
+from util import createLogger
+from constants import DEFAULT_DB_PATH
+from db_schema import ALL_TABLES
 
 class AutomatedRunner():
 

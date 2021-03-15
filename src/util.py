@@ -1,5 +1,5 @@
 import logging
-from .constants import LOG_FILE_PATH
+from constants import LOG_FILE_PATH
 
 def createLogger(name):
     logger = logging.getLogger(name)
