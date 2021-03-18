@@ -1,7 +1,7 @@
 from .database import Database
 from .util import createLogger
 from .constants import DEFAULT_DB_PATH
-from .db_schema import ALL_TABLES
+from .db_schema import ALL_TABLES, balance_trigger
 import csv
 
 class AutomatedRunner():
@@ -22,4 +22,11 @@ class AutomatedRunner():
             csv_reader = csv.reader(filestream, delimiter='|')
             for row in csv_reader:
                 self.db.insert(row[0], row[1:])
+
+    def add_triggers(self):
+        self.db.execute_cmd(balance_trigger)
+        self.log.info('Added Triggers?')
+
+    def select_all(self, tableName):
+        return self.db.select(tableName, '*')
         

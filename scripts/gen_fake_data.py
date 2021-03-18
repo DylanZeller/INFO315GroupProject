@@ -277,22 +277,15 @@ for projNum in projectNumList:
 		task = taskTable(empID, projNum)
 		csvTable.append(task)
 
-# creating billable item tables	
+# creating billable item tables	and invoices simultaneously to connect them with values
 for projNum in projectNumList:
 	invoice = invoiceTable(projNum)
 	for i in range(0, random.randint(3, 10)):
 		billable_item = billableTable(projNum, invoice[0])
 		csvTable.append(billable_item[1])
 		lineNumList.append(billable_item[0])
-		invoice[1][-1] += billable_item[1][-2]
-		invoice[1][-2] += billable_item[1][-2]
-	csvTable.append(invoice[1])
-	invoiceNumList.append(invoice[0])
-
-# creating invoice tables
-for i in range(0, random.randint(3, 5)):
-	projectNum = random.choice(projectNumList)
-	invoice = invoiceTable(projectNum)
+		invoice[1][-1] = round((invoice[1][-1] + billable_item[1][-2]), 2)
+		invoice[1][-2] = round((invoice[1][-2] + billable_item[1][-2]), 2)
 	csvTable.append(invoice[1])
 	invoiceNumList.append(invoice[0])
 
