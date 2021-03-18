@@ -1,4 +1,5 @@
 from os import path
+import re
 import sqlite3
 from sqlite3 import Error
 from .util import createLogger
@@ -67,10 +68,10 @@ class Database():
         """
         l = []
         for item in data_list:
-            if type(item) is str:
-                l.append(f'\'{item}\'')
-            else:
+            if re.match(r'^-?\d+(?:\.\d+)$', item) is not None:
                 l.append(item)
+            else:
+                l.append(f'\'{item}\'')
         return l
 
     def execute_cmd(self, cmd):
@@ -79,7 +80,8 @@ class Database():
         try:
             c = self.conn.cursor()
             c.execute(cmd)
-            self.log.debug(f'Successfully executed command {cmd}')
+            #self.log.debug(f'Successfully executed command {cmd}')
             return c.fetchall()
         except Error as e:
+            self.log.debug(f'Error Executing command {cmd}')
             self.log.error(e)

@@ -19,7 +19,7 @@ class AutomatedRunner():
 
     def import_csv(self):
         with open(self.csv_file, 'r') as filestream:
-            csv_reader = csv.reader(my_csv, delimiter='|')
+            csv_reader = csv.reader(filestream, delimiter='|')
             for row in csv_reader:
-                print(', '.join(row))
+                self.db.insert(row[0], row[1:])
         
