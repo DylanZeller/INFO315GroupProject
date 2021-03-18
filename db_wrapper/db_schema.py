@@ -69,4 +69,11 @@ billable_items_table = """CREATE TABLE IF NOT EXISTS Billable_Items (
     CONSTRAINT Billable_Items_FK1 FOREIGN KEY (projectNum) REFERENCES Project(projectNum),
     CONSTRAINT Billable_Items_FK2 FOREIGN KEY (invoiceNum) REFERENCES Invoice(invoiceNum) );"""
 
+balance_trigger = '''CREATE TRIGGER IF NOT EXISTS update_balance
+    AFTER INSERT
+    ON payment
+BEGIN
+    UPDATE invoice SET balance = ROUND((balance - NEW.amount), 2) WHERE invoiceNum = NEW.invoiceNum;
+END;'''
+
 ALL_TABLES = [business_table, project_table, employee_table, task_table, invoice_table, payment_table, billable_items_table]
