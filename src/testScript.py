@@ -41,7 +41,7 @@ def businessTable():
 	business_table.append(Revenue)
 
 	# foudningDate
-	foundingDate = fake.date_between_dates(date_start=datetime.date(1900, 1, 1), date_end= datetime.date(1990, 1, 1))
+	foundingDate = fake.date_between_dates(date_start=datetime.date(1970, 1, 1), date_end= datetime.date(1990, 1, 1))
 	business_table.append(foundingDate)
 
 	# WARNING busType
@@ -131,6 +131,7 @@ def taskTable(projectNum, EmpID):
 
 	# description
 	descriptionTask = fake.text(max_nb_chars=100)
+	descriptionTask.replace('\n', ' ')
 	task_table.append(descriptionTask)
 	
 	return task_table
@@ -153,12 +154,12 @@ def invoiceTable(projectNum):
 	invoice_table.append(invoiceDate)
 
 	# totalAmt
-	invAmt1 = random.randint(100000, 1000000)
-	invAmt2 = random.randint(10, 100)
-	invAmt2 = float(invAmt2)
-	invAmt2 = invAmt2/100
-	totalAmt = invAmt1+invAmt2
+	totalAmt = 0
 	invoice_table.append(totalAmt)
+
+	# balance
+	bal = totalAmt
+	invoice_table.append(bal)
 	
 	return (invoiceNum, invoice_table)
 
@@ -181,6 +182,7 @@ def paymentTable(invoiceNum):
 
 	# description
 	descriptionInvoice = fake.text(max_nb_chars=100)
+	descriptionInvoice.replace('\n', ' ')
 	payment_table.append(descriptionInvoice)
 
 	# amount
@@ -236,14 +238,6 @@ def billableTable(projectNum, invoiceNum):
 	# status
 	status = fake.text(max_nb_chars=15)
 	billable_items_table.append(status)
-
-	# balance
-	bal1 = random.randint(100000, 1000000)
-	bal2 = random.randint(10, 100)
-	bal2 = float(bal2)
-	bal2 = bal2/100
-	bal = bal1+bal2
-	billable_items_table.append(bal)
 	
 	return (lineNum, billable_items_table)
 
@@ -260,28 +254,40 @@ for i in range(0, random.randint(1, 3)):
 	csvTable.append(business[1])
 	businessIDList.append(business[0])
 		
-# creating project tables  		
-for i in range(0, random.randint(1, 3)):
-	BusinessID = random.choice(businessIDList)
-	project = projectTable(BusinessID)
-	csvTable.append(project[1])
-	projectNumList.append(project[0])
+# creating project tables
+for busID in businessIDList:		
+	for i in range(0, random.randint(1, 3)):
+		project = projectTable(busID)
+		csvTable.append(project[1])
+		projectNumList.append(project[0])
 
 # creating employee tables			
-for i in range(0, random.randint(10, 30)):
+for i in range(0, random.randint(5, 10)):
 	employee = employeeTable()
 	csvTable.append(employee[1])
 	empIDList.append(employee[0])
 
 # creating task tables
-for i in range(0, random.randint(3, 10)):	
-	empID = random.choice(empIDList)
-	projectNum = random.choice(projectNumList)
-	task = taskTable(empID, projectNum)
-	csvTable.append(task)
+for projNum in projectNumList:
+	for i in range(0, random.randint(3, 10)):	
+		empID = random.choice(empIDList)
+		task = taskTable(empID, projNum)
+		csvTable.append(task)
+
+# creating billable item tables	
+for projNum in projectNumList:
+	invoice = invoiceTable(projNum)
+	for i in range(0, random.randint(3, 10)):
+		billable_item = billableTable(projNum, invoice[0])
+		csvTable.append(billable_item[1])
+		lineNumList.append(billable_item[0])
+		invoice[1][-1] += billable_item[1][-2]
+		invoice[1][-2] += billable_item[1][-2]
+	csvTable.append(invoice[1])
+	invoiceNumList.append(invoice[0])
 
 # creating invoice tables
-for i in range(0, random.randint(3, 10)):
+for i in range(0, random.randint(3, 5)):
 	projectNum = random.choice(projectNumList)
 	invoice = invoiceTable(projectNum)
 	csvTable.append(invoice[1])
@@ -294,14 +300,6 @@ for i in range(0, random.randint(3, 5)):
 	csvTable.append(payment[1])
 	paymentNumList.append(payment[0])	
 
-# creating billable item tables	
-for i in range(0, random.randint(3, 5)):
-	projectNum = random.choice(projectNumList)
-	invoiceNum = random.choice(invoiceNumList)
-	billable_item = billableTable(projectNum, invoiceNum)
-	csvTable.append(billable_item[1])
-	lineNumList.append(billable_item[0])
-	
 
 with open("testData.csv","a+") as my_csv:
     csvWriter = csv.writer(my_csv,delimiter='|')

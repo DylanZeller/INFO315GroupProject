@@ -41,6 +41,7 @@ invoice_table = """CREATE TABLE IF NOT EXISTS Invoice(
 	projectNum	Number(8),
 	invoiceDate	Date,
 	totalAmt	number(8,2),
+    Balance	Number(8,2),
     CONSTRAINT Invoice_PK PRIMARY KEY(invoiceNum),
     CONSTRAINT Invoice_FK FOREIGN KEY(projectNum) REFERENCES Project(projectNum) );"""
 
@@ -64,7 +65,6 @@ billable_items_table = """CREATE TABLE IF NOT EXISTS Billable_Items (
     Description	Varchar2(50),
     Cost		Number(8,2),
     Status		Varchar2(15),
-    Balance	Number(8,2),
     CONSTRAINT BIllable_Items_PK PRIMARY KEY (projectNum,lineNum),
     CONSTRAINT Billable_Items_FK1 FOREIGN KEY (projectNum) REFERENCES Project(projectNum),
     CONSTRAINT Billable_Items_FK2 FOREIGN KEY (invoiceNum) REFERENCES Invoice(invoiceNum) );"""
