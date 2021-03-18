@@ -33,7 +33,7 @@ task_table = """CREATE TABLE IF NOT EXISTS Task (
 	EmpID		Number(8),
 	taskName	VarChar2(20),
     description	VarChar2(100),
-	CONSTRAINT Task_PK PRIMARY KEY (projectNum, EmpID),
+	CONSTRAINT Task_PK PRIMARY KEY (projectNum, EmpID, taskName),
 	CONSTRAINT Task_FK1 FOREIGN KEY (EmpID) REFERENCES Employee(EmpID) );"""
 
 invoice_table = """CREATE TABLE IF NOT EXISTS Invoice(

@@ -9,7 +9,7 @@ csvTable = []
 # business_table, BusinessID, busName, busAddress, busPhone, cellPhone, Revenue, foundingDate, busType
 def businessTable():
 	# business_table
-	business_table = ['business_table']	
+	business_table = ['business']	
 
 	# BusinessID
 	BusinessID = random.randint(100000000, 1000000000)
@@ -54,7 +54,7 @@ def businessTable():
 def projectTable(BusinessID):
 
 	# project_table
-	project_table = ['project_table']
+	project_table = ['project']
 
 	# projectNum
 	projectNum = random.randint(10000000, 100000000)
@@ -85,7 +85,7 @@ def projectTable(BusinessID):
 # employee_table, EmpID, name, address, busPhone, cellPhone, empType
 def employeeTable():
 	# employee_table
-	employee_table= ['employee_table']
+	employee_table= ['employee']
 
 	# EmpID
 	EmpID = random.randint(10000000, 100000000)
@@ -117,7 +117,7 @@ def employeeTable():
 # task_table, projectNum, EmpID, taskName, description
 def taskTable(projectNum, EmpID):
 	# task_table
-	task_table = ['task_table']
+	task_table = ['task']
 
 	# projectNum
 	task_table.append(projectNum)
@@ -130,7 +130,7 @@ def taskTable(projectNum, EmpID):
 	task_table.append(taskName)
 
 	# description
-	descriptionTask = fake.text(max_nb_chars=100)
+	descriptionTask = fake.text(max_nb_chars=99)
 	descriptionTask.replace('\n', ' ')
 	task_table.append(descriptionTask)
 	
@@ -140,7 +140,7 @@ def taskTable(projectNum, EmpID):
 # invoice_table, invoiceNum, projectNum, invoiceDate, totalAmt
 def invoiceTable(projectNum):
 	# invoice_table
-	invoice_table = ['invoice_table']
+	invoice_table = ['invoice']
 
 	# invoiceNum
 	invoiceNum = random.randint(10000000, 100000000)
@@ -167,7 +167,7 @@ def invoiceTable(projectNum):
 # payment_table, invoiceNum, payDate, Description, amount, payType, bankName
 def paymentTable(invoiceNum):
 	# payment_table
-	payment_table = ['payment_table']
+	payment_table = ['payment']
 
 	# paymentNum
 	paymentNum = random.randint(10000000, 100000000)
@@ -181,7 +181,7 @@ def paymentTable(invoiceNum):
 	payment_table.append(payDate)
 
 	# description
-	descriptionInvoice = fake.text(max_nb_chars=100)
+	descriptionInvoice = fake.text(max_nb_chars=99)
 	descriptionInvoice.replace('\n', ' ')
 	payment_table.append(descriptionInvoice)
 
@@ -206,7 +206,7 @@ def paymentTable(invoiceNum):
 # billable_items_table, projectNum, lineNum, invoiceNum, Hours, dateAdded, Description, Cost, Status, Balance
 def billableTable(projectNum, invoiceNum):
 	# billable_items_table
-	billable_items_table = ['billable_items_table']
+	billable_items_table = ['billable_items']
 
 	# projectNum
 	billable_items_table.append(projectNum)
@@ -214,6 +214,9 @@ def billableTable(projectNum, invoiceNum):
 	# lineNum
 	lineNum = random.randint(10000000, 100000000)
 	billable_items_table.append(lineNum)
+
+	# invoiceNum
+	billable_items_table.append(invoiceNum)
 
 	# hours
 	hours = random.randint(1,10000)
@@ -249,7 +252,7 @@ paymentNumList = []
 invoiceNumList = []
 
 # creating business tables
-for i in range(0, random.randint(1, 3)):
+for i in range(0, random.randint(2, 4)):
 	business = businessTable()
 	csvTable.append(business[1])
 	businessIDList.append(business[0])
@@ -301,6 +304,6 @@ for i in range(0, random.randint(3, 5)):
 	paymentNumList.append(payment[0])	
 
 
-with open("testData.csv","a+") as my_csv:
+with open("testData.csv","a+", newline='') as my_csv:
     csvWriter = csv.writer(my_csv,delimiter='|')
     csvWriter.writerows(csvTable)
