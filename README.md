@@ -10,6 +10,7 @@ This command will generate the fake data for you to see as testData.csv:
 In order to build the package and install it to your python dist, run the command
 `./build.sh`
 
+The script `./test.sh` will run the python unit tests we have created in the test directory. These unit tests cover the basic operations of the database.
 
-
-The script `test.sh` will run the python unit tests we have created in the test directory. These unit tests cover the basic operations of the database.  
+Also, to see the output for the commissions, run `python run.py auto`
+*** You must generate the test data before doing this ***
