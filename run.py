@@ -15,10 +15,11 @@ def main(args):
         ar.create_tables()
         ar.add_triggers()
         ar.import_csv()
+        ar.add_triggers_after()
         #print(ar.select_all('payment'))
         #print(ar.select_all('invoice'))
-        [print(emp) for emp in ar.select_all('employee')]
-        [print(emp) for emp in ar.db.get_commissions()]
+        print(ar.get_commission_report())
+        [print(line) for line in ar.test_trigger()]
 
 if __name__ == "__main__":
     main(sys.argv) 
