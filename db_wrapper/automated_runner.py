@@ -1,7 +1,7 @@
 from .database import Database
 from .util import createLogger
 from .constants import DEFAULT_DB_PATH
-from .db_schema import ALL_TABLES, balance_trigger
+from .db_schema import ALL_TABLES, balance_trigger, bi_trigger_ne, bi_trigger
 import csv
 
 class AutomatedRunner():
@@ -25,7 +25,15 @@ class AutomatedRunner():
 
     def add_triggers(self):
         self.db.execute_cmd(balance_trigger)
-        self.log.info('Added Triggers?')
+        self.log.info('Added Triggers Before')
+
+    def add_triggers_after(self):
+        self.db.execute_cmd(bi_trigger_ne)
+        self.db.execute_cmd(bi_trigger)
+        self.log.info('Added Triggers After')
+
+    def get_commission_report(self):
+        return self.db.get_commissions()
 
     def select_all(self, tableName):
         return self.db.select(tableName, '*')
@@ -41,5 +49,12 @@ class AutomatedRunner():
     
     def execute_custom_cmd(self, sql_cmd):
         return self.db.execute_cmd(sql_cmd)
+
+    def test_trigger(self):
+        args = ['67993546', '2', '1', '2', '2021-03-19', 'description', '100.00', 'Done']
+        self.db.insert('billable_items', args)
+        args = ['24929360', '12','76522729', '2', '2021-03-19', 'description', '100.00', 'Done']
+        self.db.insert('billable_items', args)
+        return self.select_all('invoice')
 
         

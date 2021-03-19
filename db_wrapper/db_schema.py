@@ -76,6 +76,22 @@ BEGIN
     UPDATE invoice SET balance = ROUND((balance - NEW.amount), 2) WHERE invoiceNum = NEW.invoiceNum;
 END;'''
 
+bi_trigger_ne = '''CREATE TRIGGER IF NOT EXISTS update_amt_invoice_not_exist
+    AFTER INSERT
+    ON billable_items
+    WHEN NOT EXISTS (SELECT * FROM invoice WHERE invoiceNum = NEW.invoiceNum) 
+BEGIN
+    INSERT INTO invoice VALUES ((SELECT MAX(invoiceNum) FROM invoice) + 1, NEW.projectNum, NEW.dateAdded, NEW.cost, NEW.cost);
+END;'''
+
+bi_trigger = '''CREATE TRIGGER IF NOT EXISTS update_amt_invoice
+    AFTER INSERT
+    ON billable_items
+    WHEN EXISTS (SELECT * FROM invoice WHERE invoiceNum = NEW.invoiceNum)  
+BEGIN
+    UPDATE invoice SET balance = ROUND((balance + NEW.cost), 2), totalAmt = ROUND((totalAmt + NEW.cost), 2) WHERE invoiceNum = NEW.invoiceNum;
+END;'''
+
 commission_proc = ''' SELECT employee.empID, employee.name, SUM(invoice.totalAmt) as total FROM invoice
 LEFT JOIN project ON project.projectNum = invoice.projectNum
 LEFT JOIN task ON task.projectNum = project.projectNum
