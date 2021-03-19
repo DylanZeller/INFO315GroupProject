@@ -76,4 +76,22 @@ BEGIN
     UPDATE invoice SET balance = ROUND((balance - NEW.amount), 2) WHERE invoiceNum = NEW.invoiceNum;
 END;'''
 
+commission_proc = ''' SELECT employee.empID, employee.name, SUM(invoice.totalAmt) as total FROM invoice
+LEFT JOIN project ON project.projectNum = invoice.projectNum
+LEFT JOIN task ON task.projectNum = project.projectNum
+LEFT JOIN employee ON employee.empID = task.empID
+GROUP BY employee.empID, employee.name
+ORDER BY employee.name'''
+
+task_cmd = ''' SELECT task.projectNum, task.empID FROM task
+ORDER BY task.projectNum'''
+
+inv_cmd = ''' SELECT project.projectNum, SUM(invoice.totalAmt) as total FROM project
+LEFT JOIN invoice ON invoice.projectNum = project.projectNum
+GROUP BY project.projectNum
+ORDER BY project.projectNum 
+'''
+
+emp_cmd = ''' SELECT employee.empID, employee.name from employee ORDER BY empID'''
+
 ALL_TABLES = [business_table, project_table, employee_table, task_table, invoice_table, payment_table, billable_items_table]

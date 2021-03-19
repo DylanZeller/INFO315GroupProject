@@ -29,4 +29,17 @@ class AutomatedRunner():
 
     def select_all(self, tableName):
         return self.db.select(tableName, '*')
+
+    def select_attributes(self, tableName, attrs, conditions=None):
+        """ select the certain attributes from the table name 
+            attrs: list of attribute names to select
+            conditions: list of conditions to be AND'd together
+        """
+        if conditions:
+            return self.db.select(tableName, attrs, conditions)
+        return self.db.select(tableName, attrs)
+    
+    def execute_custom_cmd(self, sql_cmd):
+        return self.db.execute_cmd(sql_cmd)
+
         

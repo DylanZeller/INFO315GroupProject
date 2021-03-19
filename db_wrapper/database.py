@@ -3,6 +3,7 @@ import re
 import sqlite3
 from sqlite3 import Error
 from .util import createLogger
+from .db_schema import commission_proc, inv_cmd, task_cmd, emp_cmd
 
 
 class Database():
@@ -61,6 +62,43 @@ class Database():
         conditional_string = ' AND '.join(self.parse_data(data_list))
         insert_cmd = f'DELTE FROM {table} WHERE ({conditional_string});'
         self.execute_cmd(insert_cmd)
+
+    def get_commissions(self):
+        """ This is a stored procedure as SQLite does not support them. 
+            It returns a formatted string of the employee ID, Name, Total Commissions
+        """
+        commissions = {}
+        cpp = {}
+        tpp = {}
+        tasks = self.execute_cmd(task_cmd)
+        projects = self.execute_cmd(inv_cmd)
+        employees = self.execute_cmd(emp_cmd)
+        for projNum, revenue in projects:
+            cpp[projNum] = revenue
+
+        for empID, projNum in tasks:
+            if projNum in tpp.keys():
+                tpp[projNum].append(empID)
+            else:
+                tpp[projNum] = [empID]
+
+        for projNum in cpp.keys():
+            emps = tpp[projNum]
+            cmsn = round((cpp[projNum] * 0.03) / len(emps), 2)
+            for empID in emps:
+                if empID not in commissions.keys():
+                    commissions[empID] = cmsn
+                else:
+                    commissions[empID] = round(commissions[empID] + cmsn, 2)
+
+        fmt = '{0:<20}{1:<20}{2:<20}\n'
+        report_string = fmt.format('Employee ID', 'Name', 'Total Comissions')
+        for empID, name in employees:
+            report_string += fmt.format(empID, name, commissions[empID])
+        return report_string
+
+
+
     
     def parse_data(self, data_list):
         """ Parse list of data into a string based on item types
