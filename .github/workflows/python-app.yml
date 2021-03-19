@@ -29,4 +29,4 @@ jobs:
         python -m pip install --force-reinstall dist/db_wrapper-0.0.1-py3-none-any.whl
     - name: Test with unittest
       run: |
-        python src/test_db.py
+        python test/test_db.py
